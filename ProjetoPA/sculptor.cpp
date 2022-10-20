@@ -42,28 +42,13 @@ Sculptor::Sculptor(int _nx, int _ny, int _nz){
         }
     }
 }
-Sculptor::~Sculptor()
-{
+
+Sculptor::~Sculptor(){
     delete[] v[0][0];
     delete[] v[0];
     delete[] v;
 }
 
-float Sculptor::getr(int x, int y, int z){
-    return v[x][y][z].r_;
-}
-
-float Sculptor::getg(int x, int y, int z){
-    return v[x][y][z].g_;
-}
-
-float Sculptor::getb(int x, int y, int z){
-    return v[x][y][z].b_;
-}
-
-float Sculptor::geta(int x, int y, int z){
-    return v[x][y][z].a_;
-}
 void Sculptor::setColor(float _r, float _g, float _b, float _a){
     r = _r;
     g = _g;
@@ -90,9 +75,9 @@ void Sculptor::cutVoxel(int x, int y, int z){
 void Sculptor::putBox(int x0, int x1, int y0, int y1, int z0, int z1){
     int i = 0, j = 0, k = 0;
 
-    for(i=x0-1; i<x1; i++){
-        for(j=y0-1; j<y1; j++){
-            for(k=z0-1; k<z1; k++){
+    for(i=x0; i<=x1; i++){
+        for(j=y0; j<=y1; j++){
+            for(k=z0; k<=z1; k++){
                 v[i][j][k].isOn = true;
                 v[i][j][k].r_ = r;
                 v[i][j][k].g_ = g;
@@ -101,14 +86,22 @@ void Sculptor::putBox(int x0, int x1, int y0, int y1, int z0, int z1){
             }
         }
     }
+
+    for(i=x0+1; i<=x1-1; i++){
+        for(j=y0+1; j<=y1-1; j++){
+            for(k=z0+1; k<=z1-1; k++){
+                v[i][j][k].isOn = false;
+            }
+        }
+    }
 }
 
 void Sculptor::cutBox(int x0, int x1, int y0, int y1, int z0, int z1){
     int i = 0, j = 0, k = 0;
 
-    for(i=x0-1; i<x1; i++){
-        for(j=y0-1; j<y1; j++){
-            for(k=z0-1; k<z1; k++){
+    for(i=x0; i<=x1; i++){
+        for(j=y0; j<=y1; j++){
+            for(k=z0; k<=z1; k++){
                 v[i][j][k].isOn = false;
                 v[i][j][k].r_ = 0;
                 v[i][j][k].g_ = 0;
@@ -120,12 +113,13 @@ void Sculptor::cutBox(int x0, int x1, int y0, int y1, int z0, int z1){
 }
 
 void Sculptor::putSphere(int xcenter, int ycenter, int zcenter, int radius){
-    int i = 0, j = 0, k = 0, aux=0;
+    int i = 0, j = 0, k = 0;
+    float aux=0;
 
     for(i=0; i<nx; i++){
         for(j=0; j<ny; j++){
             for(k=0; k<nz; k++){
-                aux=(((i-xcenter)*(i-xcenter))+((j-ycenter)*(j-ycenter))+((k-zcenter)*(k-zcenter)));
+                aux =(float)(((i-xcenter)*(i-xcenter))+((j-ycenter)*(j-ycenter))+((k-zcenter)*(k-zcenter)));
                 if((aux/(radius*radius))<=1){
                     v[i][j][k].isOn = true;
                     v[i][j][k].r_ = r;
@@ -136,15 +130,27 @@ void Sculptor::putSphere(int xcenter, int ycenter, int zcenter, int radius){
             }
         }
     }
-}
-
-void Sculptor::cutSphere(int xcenter, int ycenter, int zcenter, int radius){
-    int i = 0, j = 0, k = 0, aux=0;
 
     for(i=0; i<nx; i++){
         for(j=0; j<ny; j++){
             for(k=0; k<nz; k++){
-                aux=(((i-xcenter)*(i-xcenter))+((j-ycenter)*(j-ycenter))+((k-zcenter)*(k-zcenter)));
+                aux =(float)(((i-xcenter)*(i-xcenter))+((j-ycenter)*(j-ycenter))+((k-zcenter)*(k-zcenter)));
+                if((aux/((radius-1)*(radius-1)))<=1){
+                    v[i][j][k].isOn = false;
+                }
+            }
+        }
+    }
+}
+
+void Sculptor::cutSphere(int xcenter, int ycenter, int zcenter, int radius){
+    int i = 0, j = 0, k = 0;
+    float aux=0;
+
+    for(i=0; i<nx; i++){
+        for(j=0; j<ny; j++){
+            for(k=0; k<nz; k++){
+                aux = (float)(((i-xcenter)*(i-xcenter))+((j-ycenter)*(j-ycenter))+((k-zcenter)*(k-zcenter)));
                 if((aux/(radius*radius))<=1){
                     v[i][j][k].isOn = false;
                     v[i][j][k].r_ = 0;
@@ -157,16 +163,84 @@ void Sculptor::cutSphere(int xcenter, int ycenter, int zcenter, int radius){
     }
 }
 
-void Sculptor::writeOFF(const char* filename){
-    std::ofstream arquivo;
-    int i = 0, j = 0, k = 0, cont=0;
-    arquivo.open(filename, std::ios::app);
+void Sculptor::putEllipsoid(int xcenter, int ycenter, int zcenter, int rx, int ry, int rz){
+    int i = 0, j = 0, k = 0;
+    float aux1 = 0, aux2 = 0, aux3 = 0;
 
-    arquivo << "OFF\n";
-    arquivo << nx*ny*nz*8 << " " << nx*ny*nz*6 << " " << 0 << std::endl;
     for(i=0; i<nx; i++){
         for(j=0; j<ny; j++){
             for(k=0; k<nz; k++){
+                aux1 = (float)((i-xcenter)*(i-xcenter));
+                aux2 = (float)((j-ycenter)*(j-ycenter));
+                aux3 = (float)((k-zcenter)*(k-zcenter));
+                if(((aux1/(rx*rx))+(aux2/(ry*ry))+(aux3/(rz*rz)))<=1){
+                    v[i][j][k].isOn = true;
+                    v[i][j][k].r_ = r;
+                    v[i][j][k].g_ = g;
+                    v[i][j][k].b_ = b;
+                    v[i][j][k].a_ = a;
+                }
+            }
+        }
+    }
+
+    for(i=0; i<nx; i++){
+        for(j=0; j<ny; j++){
+            for(k=0; k<nz; k++){
+                aux1 = (float)((i-xcenter)*(i-xcenter));
+                aux2 = (float)((j-ycenter)*(j-ycenter));
+                aux3 = (float)((k-zcenter)*(k-zcenter));
+                if(((aux1/((rx-1)*(rx-1)))+(aux2/((ry-1)*(ry-1)))+(aux3/((rz-1)*(rz-1))))<=1){
+                    v[i][j][k].isOn = false;
+                }
+            }
+        }
+    }
+}
+
+void Sculptor::cutEllipsoid(int xcenter, int ycenter, int zcenter, int rx, int ry, int rz){
+    int i = 0, j = 0, k = 0;
+    float aux1 = 0, aux2 = 0, aux3 = 0;
+
+    for(i=0; i<nx; i++){
+        for(j=0; j<ny; j++){
+            for(k=0; k<nz; k++){
+                aux1 = (float)((i-xcenter)*(i-xcenter));
+                aux2 = (float)((j-ycenter)*(j-ycenter));
+                aux3 = (float)((k-zcenter)*(k-zcenter));
+                if(((aux1/(rx*rx))+(aux2/(ry*ry))+(aux3/(rz*rz)))<=1){
+                    v[i][j][k].isOn = false;
+                    v[i][j][k].r_ = 0;
+                    v[i][j][k].g_ = 0;
+                    v[i][j][k].b_ = 0;
+                    v[i][j][k].a_ = 0;
+                }
+            }
+        }
+    }
+}
+
+void Sculptor::writeOFF(char* filename){
+    std::ofstream arquivo;
+    int i = 0, j = 0, k = 0, n = 0, cont = 0;
+    arquivo.open(filename, std::ios::app);
+
+    for(i=0; i<nx; i++){
+        for(j=0; j<ny; j++){
+            for(k=0; k<nz; k++){
+                if(v[i][j][k].isOn==true){
+                    n++;
+                }
+            }
+        }
+    }
+
+    arquivo << "OFF\n";
+    arquivo << n*8 << " " << n*6 << " " << 0 << std::endl;
+    for(i=0; i<nx; i++){
+        for(j=0; j<ny; j++){
+            for(k=0; k<nz; k++){
+                if(v[i][j][k].isOn==true){
                 arquivo << i-0.5 << " " << j+0.5 << " " << k-0.5 << std::endl;
                 arquivo << i-0.5 << " " << j-0.5 << " " << k-0.5 << std::endl;
                 arquivo << i+0.5 << " " << j-0.5 << " " << k-0.5 << std::endl;
@@ -175,6 +249,7 @@ void Sculptor::writeOFF(const char* filename){
                 arquivo << i-0.5 << " " << j-0.5 << " " << k+0.5 << std::endl;
                 arquivo << i+0.5 << " " << j-0.5 << " " << k+0.5 << std::endl;
                 arquivo << i+0.5 << " " << j+0.5 << " " << k+0.5 << std::endl;
+                }
             }
         }
     }
@@ -185,37 +260,25 @@ void Sculptor::writeOFF(const char* filename){
                 if(v[i][j][k].isOn==true){
                     arquivo << std::fixed << std::setprecision(1);
                     arquivo << 4 << " " << cont*8+0 << " " << cont*8+3 << " " << cont*8+2 << " " << cont*8+1 << " ";
-                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << "\n";
+                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << std::endl;
                     arquivo << 4 << " " << cont*8+4 << " " << cont*8+5 << " " << cont*8+6 << " " << cont*8+7 << " ";
-                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << "\n";
+                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << std::endl;
                     arquivo << 4 << " " << cont*8+0 << " " << cont*8+1 << " " << cont*8+5 << " " << cont*8+4 << " ";
-                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << "\n";
+                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << std::endl;
                     arquivo << 4 << " " << cont*8+0 << " " << cont*8+4 << " " << cont*8+7 << " " << cont*8+3 << " ";
-                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << "\n";
+                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << std::endl;
                     arquivo << 4 << " " << cont*8+3 << " " << cont*8+7 << " " << cont*8+6 << " " << cont*8+2 << " ";
-                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << "\n";
+                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << std::endl;
                     arquivo << 4 << " " << cont*8+1 << " " << cont*8+2 << " " << cont*8+6 << " " << cont*8+5 << " ";
-                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << "\n";
-                }else{
-                    arquivo << 4 << " " << "*" << " " << "*" << " " << "*" << " " << "*" << " ";
-                    arquivo << "*" << " " << "*" << " " << "*" << " " << "*" << std::endl;
-                    arquivo << 4 << " " << "*" << " " << "*" << " " << "*" << " " << "*" << " ";
-                    arquivo << "*" << " " << "*" << " " << "*" << " " << "*" << std::endl;
-                    arquivo << 4 << " " << "*" << " " << "*" << " " << "*" << " " << "*" << " ";
-                    arquivo << "*" << " " << "*" << " " << "*" << " " << "*" << std::endl;
-                    arquivo << 4 << " " << "*" << " " << "*" << " " << "*" << " " << "*" << " ";
-                    arquivo << "*" << " " << "*" << " " << "*" << " " << "*" << std::endl;
-                    arquivo << 4 << " " << "*" << " " << "*" << " " << "*" << " " << "*" << " ";
-                    arquivo << "*" << " " << "*" << " " << "*" << " " << "*" << std::endl;
-                    arquivo << 4 << " " << "*" << " " << "*" << " " << "*" << " " << "*" << " ";
-                    arquivo << "*" << " " << "*" << " " << "*" << " " << "*" << std::endl;
-               }
+                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << std::endl;
                 cont++;
+                }
+
             }
         }
     }
+
     arquivo.close();
+
+    std::cout << "O modelo '" << filename << "' foi criado." << std::endl;
 }
-
-
-
