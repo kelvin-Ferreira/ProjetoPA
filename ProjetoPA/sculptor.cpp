@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <cstdlib>
 
 Sculptor::Sculptor(int _nx, int _ny, int _nz){
     nx = _nx;
@@ -34,10 +35,10 @@ Sculptor::Sculptor(int _nx, int _ny, int _nz){
         for(j=0; j<ny; j++){
             for(k=0; k<nz; k++){
                 v[i][j][k].isOn = false;
-                v[i][j][k].r_ = 0;
-                v[i][j][k].g_ = 0;
-                v[i][j][k].b_ = 0;
-                v[i][j][k].a_ = 0;
+                v[i][j][k].r = 0;
+                v[i][j][k].g = 0;
+                v[i][j][k].b = 0;
+                v[i][j][k].a = 0;
             }
         }
     }
@@ -58,18 +59,18 @@ void Sculptor::setColor(float _r, float _g, float _b, float _a){
 
 void Sculptor::putVoxel(int x, int y, int z){
     v[x][y][z].isOn = true;
-    v[x][y][z].r_ = r;
-    v[x][y][z].g_ = g;
-    v[x][y][z].b_ = b;
-    v[x][y][z].a_ = a;
+    v[x][y][z].r = r;
+    v[x][y][z].g = g;
+    v[x][y][z].b = b;
+    v[x][y][z].a = a;
 }
 
 void Sculptor::cutVoxel(int x, int y, int z){
     v[x][y][z].isOn = false;
-    v[x][y][z].r_ = 0;
-    v[x][y][z].g_ = 0;
-    v[x][y][z].b_ = 0;
-    v[x][y][z].a_ = 0;
+    v[x][y][z].r = 0;
+    v[x][y][z].g = 0;
+    v[x][y][z].b = 0;
+    v[x][y][z].a = 0;
 }
 
 void Sculptor::putBox(int x0, int x1, int y0, int y1, int z0, int z1){
@@ -79,10 +80,10 @@ void Sculptor::putBox(int x0, int x1, int y0, int y1, int z0, int z1){
         for(j=y0; j<=y1; j++){
             for(k=z0; k<=z1; k++){
                 v[i][j][k].isOn = true;
-                v[i][j][k].r_ = r;
-                v[i][j][k].g_ = g;
-                v[i][j][k].b_ = b;
-                v[i][j][k].a_ = a;
+                v[i][j][k].r = r;
+                v[i][j][k].g = g;
+                v[i][j][k].b = b;
+                v[i][j][k].a = a;
             }
         }
     }
@@ -103,10 +104,10 @@ void Sculptor::cutBox(int x0, int x1, int y0, int y1, int z0, int z1){
         for(j=y0; j<=y1; j++){
             for(k=z0; k<=z1; k++){
                 v[i][j][k].isOn = false;
-                v[i][j][k].r_ = 0;
-                v[i][j][k].g_ = 0;
-                v[i][j][k].b_ = 0;
-                v[i][j][k].a_ = 0;
+                v[i][j][k].r = 0;
+                v[i][j][k].g = 0;
+                v[i][j][k].b = 0;
+                v[i][j][k].a = 0;
             }
         }
     }
@@ -122,10 +123,10 @@ void Sculptor::putSphere(int xcenter, int ycenter, int zcenter, int radius){
                 aux =(float)(((i-xcenter)*(i-xcenter))+((j-ycenter)*(j-ycenter))+((k-zcenter)*(k-zcenter)));
                 if((aux/(radius*radius))<=1){
                     v[i][j][k].isOn = true;
-                    v[i][j][k].r_ = r;
-                    v[i][j][k].g_ = g;
-                    v[i][j][k].b_ = b;
-                    v[i][j][k].a_ = a;
+                    v[i][j][k].r = r;
+                    v[i][j][k].g = g;
+                    v[i][j][k].b = b;
+                    v[i][j][k].a = a;
                 }
             }
         }
@@ -153,10 +154,10 @@ void Sculptor::cutSphere(int xcenter, int ycenter, int zcenter, int radius){
                 aux = (float)(((i-xcenter)*(i-xcenter))+((j-ycenter)*(j-ycenter))+((k-zcenter)*(k-zcenter)));
                 if((aux/(radius*radius))<=1){
                     v[i][j][k].isOn = false;
-                    v[i][j][k].r_ = 0;
-                    v[i][j][k].g_ = 0;
-                    v[i][j][k].b_ = 0;
-                    v[i][j][k].a_ = 0;
+                    v[i][j][k].r = 0;
+                    v[i][j][k].g = 0;
+                    v[i][j][k].b = 0;
+                    v[i][j][k].a = 0;
                 }
             }
         }
@@ -175,10 +176,10 @@ void Sculptor::putEllipsoid(int xcenter, int ycenter, int zcenter, int rx, int r
                 aux3 = (float)((k-zcenter)*(k-zcenter));
                 if(((aux1/(rx*rx))+(aux2/(ry*ry))+(aux3/(rz*rz)))<=1){
                     v[i][j][k].isOn = true;
-                    v[i][j][k].r_ = r;
-                    v[i][j][k].g_ = g;
-                    v[i][j][k].b_ = b;
-                    v[i][j][k].a_ = a;
+                    v[i][j][k].r = r;
+                    v[i][j][k].g = g;
+                    v[i][j][k].b = b;
+                    v[i][j][k].a = a;
                 }
             }
         }
@@ -210,10 +211,10 @@ void Sculptor::cutEllipsoid(int xcenter, int ycenter, int zcenter, int rx, int r
                 aux3 = (float)((k-zcenter)*(k-zcenter));
                 if(((aux1/(rx*rx))+(aux2/(ry*ry))+(aux3/(rz*rz)))<=1){
                     v[i][j][k].isOn = false;
-                    v[i][j][k].r_ = 0;
-                    v[i][j][k].g_ = 0;
-                    v[i][j][k].b_ = 0;
-                    v[i][j][k].a_ = 0;
+                    v[i][j][k].r = 0;
+                    v[i][j][k].g = 0;
+                    v[i][j][k].b = 0;
+                    v[i][j][k].a = 0;
                 }
             }
         }
@@ -221,9 +222,14 @@ void Sculptor::cutEllipsoid(int xcenter, int ycenter, int zcenter, int rx, int r
 }
 
 void Sculptor::writeOFF(char* filename){
-    std::ofstream arquivo;
     int i = 0, j = 0, k = 0, n = 0, cont = 0;
+    std::ofstream arquivo;
+
     arquivo.open(filename, std::ios::app);
+
+    if(!arquivo.is_open()){
+        exit(1);
+    }
 
     for(i=0; i<nx; i++){
         for(j=0; j<ny; j++){
@@ -260,17 +266,17 @@ void Sculptor::writeOFF(char* filename){
                 if(v[i][j][k].isOn==true){
                     arquivo << std::fixed << std::setprecision(1);
                     arquivo << 4 << " " << cont*8+0 << " " << cont*8+3 << " " << cont*8+2 << " " << cont*8+1 << " ";
-                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << std::endl;
+                    arquivo << v[i][j][k].r << " " << v[i][j][k].g << " " << v[i][j][k].b << " " << v[i][j][k].a << std::endl;
                     arquivo << 4 << " " << cont*8+4 << " " << cont*8+5 << " " << cont*8+6 << " " << cont*8+7 << " ";
-                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << std::endl;
+                    arquivo << v[i][j][k].r << " " << v[i][j][k].g << " " << v[i][j][k].b << " " << v[i][j][k].a << std::endl;
                     arquivo << 4 << " " << cont*8+0 << " " << cont*8+1 << " " << cont*8+5 << " " << cont*8+4 << " ";
-                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << std::endl;
+                    arquivo << v[i][j][k].r << " " << v[i][j][k].g << " " << v[i][j][k].b << " " << v[i][j][k].a << std::endl;
                     arquivo << 4 << " " << cont*8+0 << " " << cont*8+4 << " " << cont*8+7 << " " << cont*8+3 << " ";
-                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << std::endl;
+                    arquivo << v[i][j][k].r << " " << v[i][j][k].g << " " << v[i][j][k].b << " " << v[i][j][k].a << std::endl;
                     arquivo << 4 << " " << cont*8+3 << " " << cont*8+7 << " " << cont*8+6 << " " << cont*8+2 << " ";
-                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << std::endl;
+                    arquivo << v[i][j][k].r << " " << v[i][j][k].g << " " << v[i][j][k].b << " " << v[i][j][k].a << std::endl;
                     arquivo << 4 << " " << cont*8+1 << " " << cont*8+2 << " " << cont*8+6 << " " << cont*8+5 << " ";
-                    arquivo << v[i][j][k].r_ << " " << v[i][j][k].g_ << " " << v[i][j][k].b_ << " " << v[i][j][k].a_ << std::endl;
+                    arquivo << v[i][j][k].r << " " << v[i][j][k].g << " " << v[i][j][k].b << " " << v[i][j][k].a << std::endl;
                 cont++;
                 }
 
