@@ -1,0 +1,36 @@
+\hypertarget{_sculptor_8h_source}{}\doxysection{Sculptor.\+h}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef SCULPTOR\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define SCULPTOR\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_voxel}{Voxel}} \{}
+\DoxyCodeLine{5   \textcolor{keywordtype}{float}\mbox{\hyperlink{struct_voxel_a06872ec79b836120b551a848968c0f1b}{r}},\mbox{\hyperlink{struct_voxel_a27c0da1ed2ff430401d23ff171612a73}{g}},\mbox{\hyperlink{struct_voxel_a5cd8432b1d7d0fd8b79e0fc7d10373a8}{b}};}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{14   \textcolor{keywordtype}{float} \mbox{\hyperlink{struct_voxel_a3ce2579eb0a9f09a07112ce7498a638e}{a}};}
+\DoxyCodeLine{17   \textcolor{keywordtype}{bool} \mbox{\hyperlink{struct_voxel_a6fbe8bd53f64685ac4210726d40fc775}{isOn}};}
+\DoxyCodeLine{18 \};}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20 \textcolor{keyword}{class }\mbox{\hyperlink{class_sculptor}{Sculptor}} \{}
+\DoxyCodeLine{21 \textcolor{keyword}{private}:}
+\DoxyCodeLine{22   \mbox{\hyperlink{struct_voxel}{Voxel}} ***v; \textcolor{comment}{// 3D matrix}}
+\DoxyCodeLine{23   \textcolor{keywordtype}{int} nx,ny,nz; \textcolor{comment}{// Dimensions}}
+\DoxyCodeLine{24   \textcolor{keywordtype}{float} r,g,b,a; \textcolor{comment}{// Current drawing color}}
+\DoxyCodeLine{25 \textcolor{keyword}{public}:}
+\DoxyCodeLine{28   \mbox{\hyperlink{class_sculptor}{Sculptor}}(\textcolor{keywordtype}{int} \_nx, \textcolor{keywordtype}{int} \_ny, \textcolor{keywordtype}{int} \_nz);}
+\DoxyCodeLine{29   \mbox{\hyperlink{class_sculptor}{\string~Sculptor}}();}
+\DoxyCodeLine{32   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_sculptor_af1d69da01379874b0dfd6454787cb562}{setColor}}(\textcolor{keywordtype}{float} r, \textcolor{keywordtype}{float} g, \textcolor{keywordtype}{float} b, \textcolor{keywordtype}{float} alpha);}
+\DoxyCodeLine{35   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_sculptor_a4bdea3048b419d58e93074060eaa7b52}{putVoxel}}(\textcolor{keywordtype}{int} x, \textcolor{keywordtype}{int} y, \textcolor{keywordtype}{int} z);}
+\DoxyCodeLine{37   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_sculptor_ad9d714a35fc8ae16d06eb5df37c3493c}{cutVoxel}}(\textcolor{keywordtype}{int} x, \textcolor{keywordtype}{int} y, \textcolor{keywordtype}{int} z);}
+\DoxyCodeLine{41   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_sculptor_a311ad7a0fb83fc67ac1f378be8e99fe1}{putBox}}(\textcolor{keywordtype}{int} x0, \textcolor{keywordtype}{int} x1, \textcolor{keywordtype}{int} y0, \textcolor{keywordtype}{int} y1, \textcolor{keywordtype}{int} z0, \textcolor{keywordtype}{int} z1);}
+\DoxyCodeLine{44   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_sculptor_aa84a1b12b09e9e103fc8d78f8d1bc00f}{cutBox}}(\textcolor{keywordtype}{int} x0, \textcolor{keywordtype}{int} x1, \textcolor{keywordtype}{int} y0, \textcolor{keywordtype}{int} y1, \textcolor{keywordtype}{int} z0, \textcolor{keywordtype}{int} z1);}
+\DoxyCodeLine{47   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_sculptor_a794a2b6ee8fc8098fd6150cb46101fc6}{putSphere}}(\textcolor{keywordtype}{int} xcenter, \textcolor{keywordtype}{int} ycenter, \textcolor{keywordtype}{int} zcenter, \textcolor{keywordtype}{int} radius);}
+\DoxyCodeLine{50   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_sculptor_a67ab8c0ba5116adb8af1d01ad373ac15}{cutSphere}}(\textcolor{keywordtype}{int} xcenter, \textcolor{keywordtype}{int} ycenter, \textcolor{keywordtype}{int} zcenter, \textcolor{keywordtype}{int} radius);}
+\DoxyCodeLine{54   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_sculptor_a093615b0c2b9b3a17a56300b9b939f39}{putEllipsoid}}(\textcolor{keywordtype}{int} xcenter, \textcolor{keywordtype}{int} ycenter, \textcolor{keywordtype}{int} zcenter, \textcolor{keywordtype}{int} rx, \textcolor{keywordtype}{int} ry, \textcolor{keywordtype}{int} rz);}
+\DoxyCodeLine{57   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_sculptor_a18d2922c111c4c13653ee07d878151ad}{cutEllipsoid}}(\textcolor{keywordtype}{int} xcenter, \textcolor{keywordtype}{int} ycenter, \textcolor{keywordtype}{int} zcenter, \textcolor{keywordtype}{int} rx, \textcolor{keywordtype}{int} ry, \textcolor{keywordtype}{int} rz);}
+\DoxyCodeLine{60   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_sculptor_aa8ed61fc7cae10c4d7a895330fe5e309}{writeOFF}}(\textcolor{keywordtype}{char}* filename);}
+\DoxyCodeLine{61 \};}
+\DoxyCodeLine{62 }
+\DoxyCodeLine{63 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// SCULPTOR\_H}}
+
+\end{DoxyCode}
