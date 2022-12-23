@@ -13,18 +13,14 @@ private:
     int x,y,z;
 
 public:
+    /*!Construtor padrão da classe*/
     MainWindow(QWidget *parent = nullptr);
+    /*!Destrutor da classe*/
     ~MainWindow();
 
 private slots:
-    void setX(int x_);
-    void setY(int y_);
-    void setZ(int z_);
 
 public:
-    int getX();
-    int getY();
-    int getZ();
 
 private:
     Ui::MainWindow *ui;

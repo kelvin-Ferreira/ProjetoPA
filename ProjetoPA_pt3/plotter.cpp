@@ -17,6 +17,15 @@ Plotter::Plotter(QWidget *parent) :
   r=g=b=245;
   startTimer(10);
   setMouseTracking(true);
+  int i,j,k;
+
+  for(i=0;i<100;i++){
+      for(j=0;j<100;j++){
+          for(k=0;k<100;k++){
+              this ->m[i][j][k]=0;
+          }
+      }
+  }
 }
 
 void Plotter::paintEvent(QPaintEvent *event)
@@ -25,6 +34,7 @@ void Plotter::paintEvent(QPaintEvent *event)
   QBrush brush;
   QPen pen;
   int nhoriz=100, nvert=100;
+  int i,j,k;
 
   painter.setRenderHint(QPainter::Antialiasing);
 
@@ -35,7 +45,21 @@ void Plotter::paintEvent(QPaintEvent *event)
   painter.setPen(pen);
   painter.drawRect(0,0,width(), height());
 
-  pen.setColor(QColor(180,180,180));
+  for(i=0;i<100;i++){
+      for(j=0;j<100;j++){
+          for(k=0;k<100;k++){
+              if(this ->m[i][j][z]==1){
+                  pen.setColor(QColor(rd,gd,bd));
+                  painter.setPen(pen);
+                  pen.setWidth(10);
+                  painter.drawPoint((i*width()/100)+(width()/100)/2,((99-j)*height()/100)+(height()/100)/2);
+
+              }
+          }
+      }
+  }
+
+  pen.setColor(QColor(150,150,150));
 
   pen.setWidth(2);
 
@@ -50,6 +74,7 @@ void Plotter::paintEvent(QPaintEvent *event)
                      height());
   }
 
+
 }
 
 
@@ -63,7 +88,7 @@ void Plotter::mousePressEvent(QMouseEvent *event)
 
 void Plotter::mouseMoveEvent(QMouseEvent *event)
 {
-    if(this->type==1 && this->press==true){
+    if(this->press==true){
         emit mudaXY(event->x(),event->y());
     }
 }
@@ -75,51 +100,145 @@ void Plotter::drawVoxel()
 {
     model.setColor((float)rd/255.0,(float)gd/255.0,(float)bd/255.0,1);
     model.putVoxel(x,y,z);
+    this->m[x][y][z]=1;
+    repaint();
 }
 void Plotter::drawBox()
 {
     model.setColor((float)rd/255.0,(float)gd/255.0,(float)bd/255.0,1);
     model.putBox(x,x+dimX,y,y+dimY,z,z+dimZ);
+    int i,j,k;
+    for(i=0;i<100;i++){
+        for(j=0;j<100;j++){
+            for(k=0;k<100;k++){
+                if(i>=x && i<=(x+dimX)){
+                    if(j>=y && j<=(y+dimY)){
+                        if(k>=z && k<=(z+dimZ)){
+                            m[i][j][k]=1;
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+    repaint();
 }
 
 void Plotter::drawEllipsoid()
 {
+    float aux1, aux2, aux3;
+    int i,j,k;
     model.setColor((float)rd/255.0,(float)gd/255.0,(float)bd/255.0,1);
     model.putEllipsoid(x,y,z,rX,rY,rZ);
+
+        for(i=0;i<100;i++){
+            for(j=0;j<100;j++){
+                for(k=0;k<100;k++){
+                    aux1 = (float)((i-x)*(i-x));
+                    aux2 = (float)((j-y)*(j-y));
+                    aux3 = (float)((k-z)*(k-z));
+                    if(((aux1/(rX*rX))+(aux2/(rY*rY))+(aux3/(rZ*rZ)))<=1){
+                        m[i][j][k]=1;
+                    }
+                }
+            }
+        }
+        repaint();
 }
 void Plotter::drawSphere()
 {
+    float aux;
+    int i,j,k;
     model.setColor((float)rd/255.0,(float)gd/255.0,(float)bd/255.0,1);
     model.putSphere(x,y,z,radius);
+
+    for(i=0;i<100;i++){
+        for(j=0;j<100;j++){
+            for(k=0;k<100;k++){
+                aux =(float)(((i-x)*(i-x))+((j-y)*(j-y))+((k-z)*(k-z)));
+                if((aux/(radius*radius))<=1){
+                    m[i][j][k]=1;
+                }
+            }
+        }
+    }
+    repaint();
 }
 void Plotter::eraseVoxel()
 {
-
-    model.cutVoxel(x,y,z);
+   model.cutVoxel(x,y,z);
+   this->m[x][y][z]=0;
+   repaint();
 }
 void Plotter::eraseBox()
 {
 
     model.cutBox(x,x+dimX,y,y+dimY,z,z+dimZ);
+    int i,j,k;
+    for(i=0;i<100;i++){
+        for(j=0;j<100;j++){
+            for(k=0;k<100;k++){
+                if(i>=x && i<=(x+dimX)){
+                    if(j>=y && j<=(y+dimY)){
+                        if(k>=z && k<=(z+dimZ)){
+                            m[i][j][k]=0;
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+    repaint();
 }
 
 void Plotter::eraseEllipsoid()
 {
-
+    float aux1, aux2, aux3;
+    int i,j,k;
     model.cutEllipsoid(x,y,z,rX,rY,rZ);
+
+    for(i=0;i<100;i++){
+        for(j=0;j<100;j++){
+            for(k=0;k<100;k++){
+                aux1 = (float)((i-x)*(i-x));
+                aux2 = (float)((j-y)*(j-y));
+                aux3 = (float)((k-z)*(k-z));
+                if(((aux1/(rX*rX))+(aux2/(rY*rY))+(aux3/(rZ*rZ)))<=1){
+                    m[i][j][k]=0;
+                }
+            }
+        }
+    }
+    repaint();
 }
 void Plotter::eraseSphere()
 {
-
+    int i,j,k;
+    float aux;
     model.cutSphere(x,y,z,radius);
+    for(i=0;i<100;i++){
+        for(j=0;j<100;j++){
+            for(k=0;k<100;k++){
+                aux = (float)(((i-x)*(i-x))+((j-y)*(j-y))+((k-z)*(k-z)));
+                if((aux/(radius*radius))<=1){
+                    m[i][j][k]=0;
+                }
+            }
+        }
+    }
+    repaint();
 }
 
 
 void Plotter::setXY(int x_, int y_)
 {
 
-   this-> x=(x_*100)/width();
-   this-> y=99-((y_*100)/height());
+    this-> x=(x_*100)/width();
+    this-> y=99-((y_*100)/height());
+    dx=x_;
+    dy=y_;
 
     if(type==1){
        drawVoxel();
@@ -150,6 +269,7 @@ void Plotter::setXY(int x_, int y_)
 void Plotter::setZ(int z_)
 {
     this->z = z_;
+    repaint();
 }
 
 void Plotter::save()
@@ -240,6 +360,16 @@ void Plotter::setRadius(int r)
 void Plotter::cleanBoard()
 {
     model.cutBox(0,99,0,99,0,99);
+    int i,j,k;
+
+    for(i=0;i<100;i++){
+        for(j=0;j<100;j++){
+            for(k=0;k<100;k++){
+                m[i][j][k]=0;
+            }
+        }
+    }
+    repaint();
 }
 
 

@@ -25,33 +25,5 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-void MainWindow::setX(int x_)
-{
-   this -> x=x_;
-}
 
-void MainWindow::setY(int y_)
-{
-    this -> y=y_;
-}
-
-void MainWindow::setZ(int z_)
-{
-    this -> z=z_;
-}
-
-int MainWindow::getX()
-{
-   return x;
-}
-
-int MainWindow::getY()
-{
-    return y;
-}
-
-int MainWindow::getZ()
-{
-    return z;
-}
 

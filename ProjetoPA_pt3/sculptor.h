@@ -23,7 +23,7 @@ private:
   int nx,ny,nz; // Dimensions
   float r,g,b,a; // Current drawing color
 public:
-  /*!Construtor da classe: Cria o intervalo de (0,0,0) a (nx,ny,nz),
+  /*!Construtor padrão da classe: Cria o intervalo de (0,0,0) a (99,99,99),
    *  dentro de onde a escultura pode ser desenhada.*/
   Sculptor();
   ~Sculptor();
